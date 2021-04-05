@@ -2,7 +2,7 @@
 
 An API to provide crypto-currency rates.
 
-This implementation uses BitPay as a rate provider and currently fetches all available conversion rates for BTC and ETH from BitPay.
+This implementation uses BitPay as a rate provider and currently fetches all available conversion rates for BTC and ETH from BitPay (300+ pairs in total).
 
 Inverse rates, such as USD -> BTC are also available.
 

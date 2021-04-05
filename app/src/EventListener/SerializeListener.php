@@ -60,7 +60,6 @@ class SerializeListener implements EventSubscriberInterface
                 Response::HTTP_OK,
                 [
                     'Content-Type' => sprintf('%s; charset=utf-8', $request->getMimeType($requestFormat)),
-                    'Vary' => 'Accept',
                 ]
             )
         );
