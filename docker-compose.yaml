@@ -1,0 +1,72 @@
+version: '3.5'
+services:
+
+  app:
+    build:
+      context: ./app/
+      target: base
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: ./app
+        target: /var/www/app/
+      - type: volume
+        source: app-tmp
+        target: /tmp
+    depends_on:
+      - redis
+
+  app-cron:
+    build:
+      context: ./app/
+      target: cron
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: ./app
+        target: /var/www/app/
+      - type: volume
+        source: app-cron-tmp
+        target: /tmp
+    depends_on:
+      - app
+
+  nginx:
+    image: nginx:1.19.8-alpine
+    restart: unless-stopped
+    depends_on:
+      - app
+    volumes:
+      - type: bind
+        source: ./docker/nginx/nginx.conf
+        target: /etc/nginx/nginx.conf
+        read_only: true
+      - type: bind
+        source: ./docker/nginx/conf.d/
+        target: /etc/nginx/conf.d/
+        read_only: true
+      - type: bind
+        source: ./app/public/
+        target: /var/www/app/public/
+        read_only: true
+    ports:
+      - "8080:80/tcp"
+
+  redis:
+    image: redis:6.2.1-alpine3.13
+    restart: unless-stopped
+    sysctls:
+      net.core.somaxconn: 511
+    volumes:
+      - type: volume
+        source: redis-data
+        target: /data
+      - type: bind
+        source: ./docker/redis/redis.conf
+        target: /usr/local/etc/redis/redis.conf
+    command: "redis-server /usr/local/etc/redis/redis.conf"
+
+volumes:
+  app-tmp:
+  app-cron-tmp:
+  redis-data:

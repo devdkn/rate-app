@@ -1,0 +1,10 @@
+<?php
+
+return PhpCsFixer\Config::create()
+    ->setFinder(PhpCsFixer\Finder::create()->in([
+        'src',
+    ]))->setRules([
+        '@PSR2' => true,
+        'phpdoc_indent' => true,
+    ])
+;
